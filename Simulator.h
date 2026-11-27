@@ -17,7 +17,6 @@ class Simulator {
         uint32_t registerArray[12]; //represents the registers R0 to R11
         bool n, z, c, v;
         vector <string> labelNames;
-        vector<size_t> labelTargets;
 
 
 
