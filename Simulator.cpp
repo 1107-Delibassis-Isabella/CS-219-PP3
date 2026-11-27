@@ -122,7 +122,11 @@ void Simulator::MOVorMVN(string operation, string result, string operand) {
 
     } else if (operand[0] == '#') {
         uint32_t newOperand = static_cast<uint32_t>(stoul(operand.substr(1), nullptr, 0));
-        assignValueForRegister(registerNum, newOperand);
+        if (operation == "MOV") {
+            assignValueForRegister(registerNum, newOperand);
+        } else if (operation == "MVN") {
+            assignValueForRegister(registerNum, ~newOperand);
+        }
     }
 
     
@@ -224,7 +228,6 @@ void Simulator::loadProgram(const string& filename) {
     }
     string line, labelName;
     string operatorName, result, operand1, operand2;
-    bool findLabel = false;
 
     while (getline(file, line)) {
         string normalized = line;
@@ -239,20 +242,9 @@ void Simulator::loadProgram(const string& filename) {
         operand2.clear();
         size_t labelIndex = 0;
         bool branch = false;
-        /*for (size_t i = 0; i < labelNames.size(); i++) {
-            if (operatorName == labelNames[i]) {
-                ss >> operatorName;
-                break;
-            }
-        }*/
 
         if (!(ss >> operatorName)) continue; // skip blank lines
         ss >> result >> operand1 >> operand2;
-            /*for (int i = 0; i < labelNames.size(); i++) {
-                if (labelNames[i] == result) {
-                    break;
-                }
-            }*/
         executeOperation(operatorName, result, operand1, operand2, labelIndex, branch);
         printInstruction(line);
         }
